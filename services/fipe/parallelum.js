@@ -1,4 +1,5 @@
 import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const PARALLELUM_URL = 'https://parallelum.com.br/fipe/api/v1';
 
@@ -13,7 +14,8 @@ const TYPE_MAP = {
 // tem WAF anti-datacenter. Retorna no mesmo formato do upstream oficial.
 export async function parallelumListMarcas(vehicleType) {
   const { data } = await httpClient.get(
-    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas`
+    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas`,
+    { cache: CACHE_CATEGORY.FIPE }
   );
 
   return data.map((item) => ({ Label: item.nome, Value: item.codigo }));
@@ -21,7 +23,8 @@ export async function parallelumListMarcas(vehicleType) {
 
 export async function parallelumListModelos(vehicleType, makerCode) {
   const { data } = await httpClient.get(
-    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas/${makerCode}/modelos`
+    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas/${makerCode}/modelos`,
+    { cache: CACHE_CATEGORY.FIPE }
   );
 
   return {
@@ -34,7 +37,8 @@ export async function parallelumListModelos(vehicleType, makerCode) {
 
 export async function parallelumListAnos(vehicleType, makerCode, modelCode) {
   const { data } = await httpClient.get(
-    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas/${makerCode}/modelos/${modelCode}/anos`
+    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas/${makerCode}/modelos/${modelCode}/anos`,
+    { cache: CACHE_CATEGORY.FIPE }
   );
 
   return data.map((item) => ({ Label: item.nome, Value: item.codigo }));
@@ -47,7 +51,8 @@ export async function parallelumPreco(
   yearCode
 ) {
   const { data } = await httpClient.get(
-    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas/${makerCode}/modelos/${modelCode}/anos/${yearCode}`
+    `${PARALLELUM_URL}/${TYPE_MAP[vehicleType]}/marcas/${makerCode}/modelos/${modelCode}/anos/${yearCode}`,
+    { cache: CACHE_CATEGORY.FIPE }
   );
 
   return data;

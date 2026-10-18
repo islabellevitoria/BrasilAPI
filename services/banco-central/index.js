@@ -1,5 +1,6 @@
 import getCsvAsJson from '@/util/getCsvAsJson';
 import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 import { getCnpjData } from '@/services/cnpj';
 import fs from 'fs';
 import path from 'path';
@@ -114,6 +115,7 @@ const fetchSedesData = async () => {
   const requests = BCB_SEDES_URLS.map((url) =>
     httpClient.get(url, {
       timeout: 15000,
+      cache: CACHE_CATEGORY.BANKS,
     })
   );
 
@@ -426,7 +428,8 @@ export const getBanksData = async () => {
 
   try {
     const response = await getCsvAsJson(
-      'https://www.bcb.gov.br/content/estabilidadefinanceira/str1/ParticipantesSTR.csv'
+      'https://www.bcb.gov.br/content/estabilidadefinanceira/str1/ParticipantesSTR.csv',
+      CACHE_CATEGORY.BANKS
     );
     banksData = formatCsvFile(response);
   } catch (err) {

@@ -1,6 +1,7 @@
 import httpClient from '@/lib/http/client';
 
 import NotFoundError from '@/errors/NotFoundError';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const API_BASE_URL = 'https://openlibrary.org';
 const API_SEARCH_URL = `${API_BASE_URL}/api/books`;
@@ -63,6 +64,7 @@ export default async function searchInOpenLibrary(isbn) {
       },
       headers: { Accept: 'application/json' },
       timeout: 5000,
+      cache: CACHE_CATEGORY.ISBN,
     });
 
     if (Object.keys(response.data).length === 0 || !response.data[bibKey]) {
@@ -78,6 +80,7 @@ export default async function searchInOpenLibrary(isbn) {
           Accept: 'application/json',
         },
         timeout: 5000,
+        cache: CACHE_CATEGORY.ISBN,
       }
     );
 

@@ -1,6 +1,7 @@
 import httpClient from '@/lib/http/client';
 
 import NotFoundError from '@/errors/NotFoundError';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const API_BASE_URL = 'https://api.mercadoeditorial.org/api/v1.2';
 const API_SEARCH_URL = `${API_BASE_URL}/book`;
@@ -58,6 +59,7 @@ export default async function searchInMercadoEditorial(isbn) {
       params: { isbn },
       headers: { Accept: 'application/json' },
       timeout: 5000,
+      cache: CACHE_CATEGORY.ISBN,
     });
 
     if (!response.data.books || !response.data.books[0]) {

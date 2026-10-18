@@ -2,6 +2,7 @@ import httpClient from '@/lib/http/client';
 import { XMLParser } from 'fast-xml-parser';
 import normalizeBrazilianDate from '@/util/normalizeBrazilianDate';
 import { CONDITION_DESCRIPTIONS, CPTEC_URL } from './constants';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const parser = new XMLParser();
 
@@ -66,6 +67,7 @@ export const getCurrentCapitalWeatherData = async () => {
     `${CPTEC_URL}/capitais/condicoesAtuais.xml`,
     {
       responseType: 'text',
+      cache: CACHE_CATEGORY.CLIMA,
     }
   );
 
@@ -87,6 +89,7 @@ export const getCurrentAirportWeather = async (icaoCode) => {
     `${CPTEC_URL}/estacao/${icaoCode}/condicoesAtuais.xml`,
     {
       responseType: 'text',
+      cache: CACHE_CATEGORY.CLIMA,
     }
   );
   const parsed = parser.parse(airportWeather.data);
@@ -109,6 +112,7 @@ export const getPredictionWeatherByLocation = async (lat, long) => {
   const weatherPredictions = await httpClient.get(url, {
     responseType: 'text',
     encoding: 'binary',
+    cache: CACHE_CATEGORY.CLIMA,
   });
 
   const parsed = parser.parse(weatherPredictions.data);
@@ -142,6 +146,7 @@ export const getPredictionWeather = async (cityCode, days) => {
   const weatherPredictions = await httpClient.get(url, {
     responseType: 'text',
     encoding: 'binary',
+    cache: CACHE_CATEGORY.CLIMA,
   });
 
   const parsed = parser.parse(weatherPredictions.data);

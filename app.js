@@ -3,6 +3,7 @@ import nc from 'next-connect';
 import cors from 'cors';
 import onError from './middlewares/errorHandler';
 import cache from './middlewares/cache';
+import cacheStatus from './middlewares/cacheStatus';
 import logger from './middlewares/logger';
 import firewall from './middlewares/firewall';
 
@@ -42,7 +43,8 @@ const app = (options = {}) => {
     .use(cors(configurations.cors))
     .use(firewall)
     .use(logger)
-    .use(cache(configurations.cache));
+    .use(cache(configurations.cache))
+    .use(cacheStatus);
 };
 
 export default app;

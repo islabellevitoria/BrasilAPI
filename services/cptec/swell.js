@@ -3,6 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 
 import normalizeBrazilianDate from '@/util/normalizeBrazilianDate';
 import { CPTEC_URL, WIND_SWELL_DIRECTIONS } from './constants';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const parser = new XMLParser();
 
@@ -13,6 +14,7 @@ export const getSwellData = async (cityCode, days) => {
     const swellData = await httpClient.get(url, {
       responseType: 'text',
       encoding: 'binary',
+      cache: CACHE_CATEGORY.CLIMA,
     });
 
     const jsonData = parser.parse(swellData.data);

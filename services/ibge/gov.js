@@ -1,6 +1,7 @@
 import httpClient from '@/lib/http/client';
 import mapUfToUfCode from '@/util/mapUfToUfCode';
 import InternalError from '@/errors/InternalError';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const URL_UF = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados';
 
@@ -44,19 +45,21 @@ const addCapital = (uf) => ({
 });
 
 export const getUfs = () =>
-  httpClient.get(URL_UF).then((response) => {
+  httpClient.get(URL_UF, { cache: CACHE_CATEGORY.IBGE }).then((response) => {
     response.data = response.data.map(addCapital);
     return response;
   });
 
 export const getUfByCode = (code) =>
-  httpClient.get(`${URL_UF}/${code}`).then((response) => {
+  httpClient.get(`${URL_UF}/${code}`, { cache: CACHE_CATEGORY.IBGE }).then((response) => {
     response.data = addCapital(response.data);
     return response;
   });
 
 export const getContiesByUf = async (uf) => {
-  const { data } = await httpClient.get(`${URL_UF}/${uf}/municipios`);
+  const { data } = await httpClient.get(`${URL_UF}/${uf}/municipios`, {
+    cache: CACHE_CATEGORY.IBGE,
+  });
 
   return data.map((item) => ({
     nome: item.nome,
@@ -72,7 +75,8 @@ export const getUfEstimatePopulationByCode = async (uf) => {
   const LATEST_PERIOD = -1;
 
   let { data } = await httpClient.get(
-    `${URL_AGGREGATES}/${ESTIMATED_POPULATION_AGGREGATE_ID}/periodos/${LATEST_PERIOD}/variaveis?localidades=N3[${ufCode}]`
+    `${URL_AGGREGATES}/${ESTIMATED_POPULATION_AGGREGATE_ID}/periodos/${LATEST_PERIOD}/variaveis?localidades=N3[${ufCode}]`,
+    { cache: CACHE_CATEGORY.IBGE }
   );
 
   data = data.find(
@@ -92,10 +96,10 @@ export const getUfEstimatePopulationByCode = async (uf) => {
   };
 };
 
-export const getRegions = () => httpClient.get(URL_REGION);
+export const getRegions = () => httpClient.get(URL_REGION, { cache: CACHE_CATEGORY.IBGE });
 
 export const getUfsByRegion = (regionCode) =>
-  httpClient.get(`${URL_REGION}/${regionCode}/estados`);
+  httpClient.get(`${URL_REGION}/${regionCode}/estados`, { cache: CACHE_CATEGORY.IBGE });
 
 export const getRegionByCode = (regionCode) =>
-  httpClient.get(`${URL_REGION}/${regionCode}`);
+  httpClient.get(`${URL_REGION}/${regionCode}`, { cache: CACHE_CATEGORY.IBGE });

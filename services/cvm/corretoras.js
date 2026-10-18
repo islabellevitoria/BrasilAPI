@@ -1,5 +1,6 @@
 import AdmZip from 'adm-zip';
 import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const LINE_BREAK = '\r\n';
 
@@ -8,6 +9,7 @@ async function requestCvmFile() {
     'https://dados.cvm.gov.br/dados/INTERMED/CAD/DADOS/cad_intermed.zip';
   return httpClient.get(fileUrl, {
     responseType: 'buffer',
+    cache: CACHE_CATEGORY.CVM,
   });
 }
 

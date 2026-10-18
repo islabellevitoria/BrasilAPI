@@ -1,5 +1,6 @@
 import httpClient from '@/lib/http/client';
 import { z } from 'zod';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const URL = 'https://sistemaswebb3-listados.b3.com.br';
 const PAGE_SIZE = 120;
@@ -78,7 +79,8 @@ async function fetchStockTickers({ pageNumber, pageSize, language = 'pt-br' }) {
   ).toString('base64');
 
   const { data } = await httpClient.get(
-    `${URL}/listedCompaniesProxy/CompanyCall/GetInitialCompanies/${paramsB64}`
+    `${URL}/listedCompaniesProxy/CompanyCall/GetInitialCompanies/${paramsB64}`,
+    { cache: CACHE_CATEGORY.B3 }
   );
 
   const parsedResponse = rawResponseStocksSchema.parse(data);
@@ -116,7 +118,8 @@ async function fetchInvestmentFundTickers({
   ).toString('base64');
 
   const { data } = await httpClient.get(
-    `${URL}/fundsListedProxy/Search/GetListFunds/${paramsB64}`
+    `${URL}/fundsListedProxy/Search/GetListFunds/${paramsB64}`,
+    { cache: CACHE_CATEGORY.B3 }
   );
 
   const parsedResponse = rawResponseInvestmentFundsSchema.parse(data);

@@ -1,4 +1,5 @@
 import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 // Geocoding via Open-Meteo (gratuito, sem key, sem rate-limit agressivo).
 // O Nominatim do OpenStreetMap rate-limita IPs compartilhados (429) —
@@ -22,6 +23,7 @@ const getCoordinates = async (location) => {
       format: 'json',
     },
     timeout: 10000,
+    cache: CACHE_CATEGORY.GEOCODING,
   });
 
   const result = response.data?.results?.[0];
@@ -37,7 +39,7 @@ export const getSolarIncidence = async (location) => {
   const { lat, lon } = await getCoordinates(location);
   const response = await httpClient.get(
     `https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0`,
-    { timeout: 10000 }
+    { timeout: 10000, cache: CACHE_CATEGORY.SOLAR }
   );
 
   return response.data.results;
