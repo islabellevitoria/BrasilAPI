@@ -1,0 +1,38 @@
+{
+  "id": "FEAT-003",
+  "type": "docs",
+  "description": "Criar o documento de implementação docs/HTTP_CACHE_GOT_KEYV.md em português, com todos os detalhes reais da implementação (outputs reais de npm ls, testes, build). É o entregável explícito do usuário ('Gere um documento com todos os detalhes da implementação'). Depende de FEAT-002 (toda a implementação deve estar concluída antes de escrever resultados reais).",
+  "status": "pending",
+  "steps": [
+    "1. Rodar os comandos abaixo para coletar dados reais para o documento:",
+    "   a. npm ls got keyv @keyv/sqlite sqlite3 http-cache-semantics 2>&1 (versões instaladas)",
+    "   b. npm run test:unit 2>&1 (resultado dos testes)",
+    "   c. npm run build 2>&1 (resultado do next build — registrar se passou ou se houve avisos relevantes)",
+    "2. Escrever docs/HTTP_CACHE_GOT_KEYV.md em português. Seções obrigatórias (conforme design §1):",
+    "   ## 1. Dependências e Versões — tabela com pacote, versão exata, motivo; saída real de 'npm ls'.",
+    "   ## 2. Arquitetura e Módulos — diagrama de texto da arquitetura (pages→services→lib/http/client→redirects→cachedHop→store); tabela de cada arquivo novo com responsabilidade e exports públicos; lista dos arquivos alterados.",
+    "   ## 3. Regras RFC 7234 (R1–R16) e Algoritmo — descrever cada regra; pseudocódigo/texto do algoritmo prepare/finalize/degradação/refetch.",
+    "   ## 4. Formato Persistido e Chave — schema JSON (v1) dos 4 tipos de registro (entry, vary, body, _probe); composição da chave (pk → baseHash → metaKey/bodyKey).",
+    "   ## 5. Tabela de TTL por Categoria — tabela das 19 categorias com provedor, TTL padrão, variável de override, justificativa. Todas as 6 variáveis de ambiente com tipo, faixa e padrão.",
+    "   ## 6. Cabeçalho X-Cache — valores HIT/MISS/REVALIDATED; quando aparece e quando não aparece (rotas sem app(), rotas de dados locais).",
+    "   ## 7. CLI cache:clear — uso ('npm run cache:clear -- <cat>|--route <path>|--all'); guarda de produção; limitação de que não lê .env* (explicar divergência de caminho se usar .env.local); arquivo do banco impresso no stdout.",
+    "   ## 8. Paridade com Axios — tabela de comparação: timeout (relógio de parede), inatividade pós-cabeçalhos, redirects (regras exatas), retry, status validation, AbortSignal, erros de rede, params, corpo de POST, decodificação.",
+    "   ## 9. Mudanças Arquivo a Arquivo — lista dos 34 arquivos de produção migrados (com indicação de qual categoria cada um recebeu ou 'sem cache') e dos 13 testes adaptados.",
+    "   ## 10. Resultados — saída real do npm run test:unit (quantos testes passaram/falharam), saída do next build (se passou), versão do Node usada.",
+    "   ## 11. Desvios Deliberados e Backlog — listar D1–D10 do design §23.1; riscos residuais (Vercel /tmp efêmero, binário nativo sqlite3, warn max 12/h, user-agent legado); backlog (invalidação por URL, endpoint HTTP de invalidação, OpenAPI do X-Cache, etapa 5/6/7).",
+    "   ## 12. Aviso sobre Etapa 7 — a documentação OpenAPI do X-Cache é obrigatória na etapa 7 da atividade (conforme convenção do projeto de manter OpenAPI atualizado ao modificar endpoints)."
+  ],
+  "acceptance_criteria": [
+    "docs/HTTP_CACHE_GOT_KEYV.md existe",
+    "O arquivo contém as 12 seções numeradas",
+    "Seção 1 contém a saída real de npm ls com as 5 versões exatas",
+    "Seção 9 lista os 34 arquivos de produção e os 13 testes",
+    "Seção 10 inclui resultado real de npm run test:unit (não estimado)"
+  ],
+  "verification": [
+    "Test-Path c:\\Users\\islabelle.bastos_big\\Documents\\BrasilAPI\\docs\\HTTP_CACHE_GOT_KEYV.md",
+    "Get-Content c:\\Users\\islabelle.bastos_big\\Documents\\BrasilAPI\\docs\\HTTP_CACHE_GOT_KEYV.md | Select-String '## 1\\.' | Select-Object -First 1"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,0 +1,7 @@
+{
+  "task_id": "task-brasilapi-cache-got-keyv",
+  "task_description": "Substituir axios por Got 11 em todas as chamadas externas de produção do BrasilAPI, adicionar camada de cache HTTP persistente com Keyv/SQLite, implementar conformidade RFC 7234 com requisições condicionais (ETag/Last-Modified/304), e adicionar cabeçalho X-Cache. Etapas 1–4 da atividade A2.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
+  "blocked_reason": null
+}

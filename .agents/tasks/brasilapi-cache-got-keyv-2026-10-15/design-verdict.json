@@ -1,0 +1,94 @@
+{
+  "verdict": "CHANGES_REQUESTED",
+  "counts": { "HIGH": 1, "MEDIUM": 8, "NIT": 15 },
+  "findings": [
+    {
+      "id": 1,
+      "severity": "HIGH",
+      "title": "Cache-Control é comparado com diferença de caixa: no-store/private podem ser gravados",
+      "location": "§5.2 R3/R5/R6, §18, I4",
+      "problem": "O http-cache-semantics 4.3.0 não normaliza a caixa (medido: 'Private, Max-Age=60' e 'No-Store' dão storable() === true). Com o R6, 'No-Store' sem Last-Modified vira HIT por até ttlCategoria.",
+      "fix": "normalizeCacheHeaders(): passar cache-control e pragma para minúsculas antes de todo new CachePolicy (MISS e 304 mesclado) e antes dos parsers próprios; mesma regra no R14; I4 e AC-08 ganham um caso 'No-Store'."
+    },
+    {
+      "id": 2,
+      "severity": "MEDIUM",
+      "title": "Predicado explícito × heurístico (R4/R5/R6) não definido",
+      "location": "§5.2 R4-R6, §3 policy.js, I3",
+      "problem": "Não define o que fazer com Pragma: no-cache sem Cache-Control (que o R6 transformaria em ttlCategoria), com valores inválidos ou vazios (max-age=abc, max-age=) nem com diretivas duplicadas.",
+      "fix": "Especificar freshnessSource(h, cc) → 'revalidate' | 'explicit' | 'heuristic' por presença da diretiva, incluindo Pragma sem Cache-Control; explícito com valor que não casa /^\\d+$/ ou duplicado com valores diferentes ⇒ lifetime = 0."
+    },
+    {
+      "id": 3,
+      "severity": "MEDIUM",
+      "title": "Paridade de timeout com o axios está errada",
+      "location": "§10.2 Timeout, §14 timeout, I7",
+      "problem": "O axios usa o follow-redirects, que soma um relógio de parede até os cabeçalhos. Medido: axios timeout 500 → ECONNABORTED em 531 ms; Got {socket: 500} → 200 em 1650 ms com cabeçalhos gotejando.",
+      "fix": "Usar Got timeout: { socket: N, response: N } (medido: igual ao axios nos dois cenários); TimeoutError antes dos cabeçalhos → ECONNABORTED + 'timeout of Nms exceeded'."
+    },
+    {
+      "id": 4,
+      "severity": "MEDIUM",
+      "title": "methodRewriting: true no Got 11.8.6 não reproduz o axios em POST com 301/302",
+      "location": "§10.2 opções do Got, R16, Decisão 1",
+      "problem": "O Got 11.8.6 mantém POST e corpo em 301/302; o follow-redirects troca para GET. Com false, o Got troca tudo (inclusive 307/308) para GET. Afeta os POSTs de FIPE e CBL.",
+      "fix": "Um único seguidor recursivo para todas as chamadas, com Got sempre em followRedirect: false e as regras do follow-redirects (301/302 POST → GET sem content-*; 303 → GET; 307/308 mantêm método; outro host remove authorization/cookie/proxy-authorization)."
+    },
+    {
+      "id": 5,
+      "severity": "MEDIUM",
+      "title": "TTL do índice de Vary quebra o RN02",
+      "location": "§5.4 registro kind 'vary', writeMetaOnly",
+      "problem": "O 304 não renova o índice; ele expira e a variante revalidável fica inalcançável (MISS sem condicional, órfãos). Uma variante com TTL menor encurta o índice das outras. Afeta Anatel, IBPT e open-meteo.",
+      "fix": "Gravar o índice de Vary sem TTL no Keyv, regravado a cada write de variante e removido por remove/CLI; índice presente com variante ausente ⇒ MISS."
+    },
+    {
+      "id": 6,
+      "severity": "MEDIUM",
+      "title": "Exceções fora do store (policy, keys, orquestração) não degradam para a origem",
+      "location": "§5.3, I6, §17",
+      "problem": "fetchHop não tem try/catch: exceções em keys/fromObject/revalidationHeaders/revalidatedPolicy/merge/evaluateStorability viram 500. Falta a regra que proíbe uma segunda chamada à origem depois que a resposta chegou.",
+      "fix": "Separar prepareFromCache (falha ⇒ transporte direto, MISS) de finalizeWithCache (falha ⇒ devolve a resposta já obtida; um 304 usa o corpo já lido; só refaz a chamada, incondicional e uma vez, se o corpo for inutilizável)."
+    },
+    {
+      "id": 7,
+      "severity": "MEDIUM",
+      "title": "Axios em devDependencies quebra o lint de scripts/ e o pre-commit",
+      "location": "§13 Decisão 10, §2, AC-01",
+      "problem": "A regra import/no-extraneous-dependencies do airbnb não libera scripts/**. Simulado: 3 erros em scripts/generate-*.js. npm run fix e o hook husky/lint-staged falham.",
+      "fix": "Manter axios 1.8.3 em dependencies (nenhum código de produção o importa; AC-02 garante); remover o npm install --save-dev axios e ajustar §0/§2/§13/AC-01."
+    },
+    {
+      "id": 8,
+      "severity": "MEDIUM",
+      "title": "TTL de banks contradiz o F03.1 ('TTL longo para bancos')",
+      "location": "§7.1",
+      "problem": "banks = 86400 está na faixa 'médio', sem desvio registrado; a tabela também não explica que feriados não tem chamada externa.",
+      "fix": "banks = 604800 com justificativa citando o F03.1; nota: 'feriados: dados locais, sem chamada externa, fora do cache'."
+    },
+    {
+      "id": 9,
+      "severity": "MEDIUM",
+      "title": "Documento de implementação pedido pelo usuário fora do escopo",
+      "location": "§1",
+      "problem": "O usuário pediu 'Gere um documento com todos os detalhes da implementação'; o design omite o documento e põe 'documentação técnica' fora do escopo.",
+      "fix": "Listar em 'Dentro do escopo' o documento de implementação (caminho fixo, ex.: docs/cache-http-got-keyv.md) com versões, módulos, R1-R16, TTL/env, X-Cache, CLI, mudanças por arquivo, testes adaptados, resultados sob Node 20, desvios e riscos; separar da etapa 7."
+    },
+    { "id": 10, "severity": "NIT", "title": "httpClient.request exportado sem assinatura", "location": "§3, §14", "fix": "Remover request do export default." },
+    { "id": 11, "severity": "NIT", "title": "Contratos de HttpClientError, isHttpClientError e da interface do store não escritos", "location": "§3, §10.2, §16, §5.3", "fix": "Acrescentar as assinaturas (ctor(message, {code, request, response, name='AxiosError', cause}), flag isHttpClientError, formas de read/write/writeMetaOnly/remove)." },
+    { "id": 12, "severity": "NIT", "title": "Justificativa do listener 'error' do Keyv imprecisa e handler indefinido", "location": "§10.1", "fix": "O construtor do Keyv já escuta o store; o handler é no-op (falhas tratadas pelas rejeições, sem log nem contagem duplicados)." },
+    { "id": 13, "severity": "NIT", "title": "Sonda de inicialização ambígua (PRAGMA × conexão)", "location": "§10.1", "fix": "SELECT 1 (falha ⇒ desliga), depois PRAGMA (falha ⇒ warn); sonda de escrita opcional para arquivo somente leitura." },
+    { "id": 14, "severity": "NIT", "title": "Circuit breaker permanente por processo", "location": "§10.1", "fix": "Half-open após N minutos, ou registrar no backlog." },
+    { "id": 15, "severity": "NIT", "title": "Merge do 304 mantém Age antigo", "location": "R12", "fix": "Remover age armazenado quando o 304 não o enviar." },
+    { "id": 16, "severity": "NIT", "title": "maxRedirects: 0 difere do axios", "location": "§5.3, §14", "fix": "Com 0, o 3xx é a resposta final (erro por status), sem ERR_FR_TOO_MANY_REDIRECTS." },
+    { "id": 17, "severity": "NIT", "title": "params com array rejeitado (geolocation com language repetido passaria de 200 para 500)", "location": "§14", "fix": "Aceitar arrays de escalares e serializar como o axios (key[]=v)." },
+    { "id": 18, "severity": "NIT", "title": "Corpos órfãos e crescimento sem limite", "location": "§5.4", "fix": "No read, metadados ausentes com corpo presente ⇒ remover o corpo (best-effort); --expired no backlog." },
+    { "id": 19, "severity": "NIT", "title": "CLI duplica a regra de caminho (sem VERCEL) e ignora .env*", "location": "§12", "fix": "Imprimir o caminho absoluto resolvido; documentar que a variável precisa estar no ambiente do shell." },
+    { "id": 20, "severity": "NIT", "title": "Nomes de categoria não validados (curingas do LIKE, separador ':')", "location": "§7.1, §6, §12", "fix": "config.js valida /^[a-z][a-z0-9]*$/ e falha no carregamento." },
+    { "id": 21, "severity": "NIT", "title": "Desvios deliberados (F02.1, RN04, F03.3) não destacados", "location": "§23", "fix": "Subseção 'Desvios deliberados'; mapa routes → categorias opcional para cache:clear --route." },
+    { "id": 22, "severity": "NIT", "title": "npm ls esperado omite keyv@4.5.4 aninhado em flat-cache", "location": "§2", "fix": "Citar os dois aninhamentos (cacheable-request e flat-cache)." },
+    { "id": 23, "severity": "NIT", "title": "R5: frase sobre s-maxage imprecisa", "location": "§5.2 R5", "fix": "s-maxage define o tempo de vida (R4); só a revalidação implícita importa para resposta vencida." },
+    { "id": 24, "severity": "NIT", "title": "X-Cache sem OpenAPI (convenção do projeto)", "location": "§11", "fix": "Marcar como obrigatório na etapa 7 e citar no documento de implementação." }
+  ],
+  "reviewDoc": "c:\\Users\\islabelle.bastos_big\\Documents\\BrasilAPI\\.agents\\tasks\\brasilapi-cache-got-keyv-2026-10-15/design-review.md"
+}

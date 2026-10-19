@@ -1,0 +1,69 @@
+{
+  "verdict": "APPROVED",
+  "findings": [
+    {
+      "id": 1,
+      "severity": "NIT",
+      "title": "sameVaryNames usada em cachedHop.finalize() mas não declarada em nenhuma tabela de exports",
+      "location": "§5.4 (algoritmo finalize)",
+      "fix": "Acrescentar `sameVaryNames(h1, h2): boolean` à lista de exports de policy.js em §3 (compara parseVary(h1.vary) com parseVary(h2.vary)) ou declarar como helper privado de cachedHop.js."
+    },
+    {
+      "id": 2,
+      "severity": "NIT",
+      "title": "normalizeHeaderValue referenciada em §6 (cálculo do variantHash) mas ausente dos exports de keys.js",
+      "location": "§6",
+      "fix": "Acrescentar normalizeHeaderValue à lista de exports de keys.js com spec: valor ausente → ''; trim + colapso de espaços internos (RFC 7234 §4.1)."
+    },
+    {
+      "id": 3,
+      "severity": "NIT",
+      "title": "withoutHost usada no algoritmo de cachedHop.js mas não definida em lugar algum do design",
+      "location": "§5.4 (`const headers = withoutHost(policy.revalidationHeaders(snapshot))`)",
+      "fix": "Adicionar em §5.3 R11 ou §3: 'withoutHost(headers) — helper puro que devolve { ...headers } sem o campo host.'"
+    },
+    {
+      "id": 4,
+      "severity": "NIT",
+      "title": "Tipo de retorno de keys.variant não especificado",
+      "location": "§3 (tabela de módulos, keys.js)",
+      "fix": "Especificar: retorna { metaKey: string, bodyKey: string } — as chaves com sufixo .<variantHash> baseadas no objeto base."
+    },
+    {
+      "id": 5,
+      "severity": "NIT",
+      "title": "Estrutura completa de categories.json não está exemplificada como bloco JSON",
+      "location": "§3, §7.1, §7.4, §9",
+      "fix": "Adicionar um esqueleto JSON mínimo com schemaVersion, defaults, categories[*].ttlSeconds, categories[*].justification e routes para evitar ambiguidade de naming."
+    },
+    {
+      "id": 6,
+      "severity": "NIT",
+      "title": "Comportamento de createDeadline com remaining() === Infinity não especifica que transport.js NÃO deve armar setTimeout",
+      "location": "§3.1 (createDeadline)",
+      "fix": "Acrescentar: 'em transport.send, o timer só é armado quando deadline.remaining() !== Infinity' para evitar o setTimeout(Infinity) que poderia violar I13."
+    },
+    {
+      "id": 7,
+      "severity": "NIT",
+      "title": "Mapeamento de opção cache → campo category no req interno de client.js não é declarado explicitamente",
+      "location": "§14 (Fluxo de get, passos 1–2)",
+      "fix": "No passo 1 ou 2 do fluxo de get em §14, declarar que req é montado com category: activeCategory (string resolvida ou null), não com o campo cache original."
+    },
+    {
+      "id": 8,
+      "severity": "NIT",
+      "title": "Interface do log injetado em createCachedHop não é especificada formalmente",
+      "location": "§3.1 (createCachedHop), §5.4 (log.warnOnce)",
+      "fix": "Adicionar: 'log = { warnOnce(key: string, error: unknown): void } — console.warn exatamente uma vez por key por processo; Set de deduplicação no escopo do módulo de cachedHop.js; padrão: implementação interna.'"
+    },
+    {
+      "id": 9,
+      "severity": "NIT",
+      "title": "Nome do arquivo SQLite padrão (http-cache.sqlite) diverge do nome citado no brief do workflow (brasilapi.sqlite)",
+      "location": "§9 (caminho padrão local e Vercel), AC-05",
+      "fix": "Confirmar o nome preferido e alinhar §9, AC-05, gitignore e §24. Sugestão: brasilapi-http-cache.sqlite (já usado para Vercel em os.tmpdir(), tornando os nomes consistentes)."
+    }
+  ],
+  "reviewDoc": "c:\\Users\\islabelle.bastos_big\\Documents\\BrasilAPI\\.agents\\tasks\\brasilapi-cache-got-keyv-2026-10-15/design-review-iter2.md"
+}
