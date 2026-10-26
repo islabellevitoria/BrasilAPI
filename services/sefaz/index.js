@@ -1,5 +1,6 @@
 import httpClient from '@/lib/http/client';
 import ncmList from './ncmList.json';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 function parseObject(obj) {
   const formatDate = (date) => {
@@ -39,7 +40,7 @@ const fetchNcmListFromSefaz = async () => {
   const url =
     'https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json';
 
-  const { data: body } = await httpClient.get(url);
+  const { data: body } = await httpClient.get(url, { cache: CACHE_CATEGORY.NCM });
 
   return body;
 };

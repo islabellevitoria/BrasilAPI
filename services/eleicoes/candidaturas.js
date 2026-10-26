@@ -7,6 +7,7 @@ import {
   verifyIsNotNumber,
   ERRORMESSAGES,
 } from './constants';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 export const listCandidatureByMunicipality = async (
   election,
@@ -53,7 +54,7 @@ export const listCandidatureByMunicipality = async (
   try {
     const requestUrl = `${ELECTIONS_API_URL}${CANDIDATE_LIST_URL}/${year}/${municipality}/${election}/${position}/candidatos`;
 
-    const response = await httpClient.get(requestUrl);
+    const response = await httpClient.get(requestUrl, { cache: CACHE_CATEGORY.ELEICOES });
     return response.data;
   } catch (error) {
     const err = new Error('Erro ao buscar candidaturas.');
@@ -97,7 +98,7 @@ export const searchCandidate = async (
   try {
     const requestUrl = `${ELECTIONS_API_URL}${CANDIDATE_SEARCH_URL}/${yearStr}/${municipality}/${election}/candidato/${candidate}`;
 
-    const response = await httpClient.get(requestUrl);
+    const response = await httpClient.get(requestUrl, { cache: CACHE_CATEGORY.ELEICOES });
     return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {

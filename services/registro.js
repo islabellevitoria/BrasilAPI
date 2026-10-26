@@ -1,4 +1,5 @@
-import axios from 'axios';
+import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 /**
  * ### Avalia o dominio no registro.br
@@ -13,5 +14,7 @@ export default function getRegistroBrAvail(domain) {
     /[^A-Za-z0-9àáâãéêíóôõúüç.-]/.test(domain)
   )
     throw new Error('O domínio não foi informado corretamente!');
-  return axios.get(`https://registro.br/v2/ajax/avail/raw/${domain}`);
+  return httpClient.get(`https://registro.br/v2/ajax/avail/raw/${domain}`, {
+    cache: CACHE_CATEGORY.REGISTROBR,
+  });
 }

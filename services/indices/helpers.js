@@ -1,5 +1,6 @@
 import httpClient from '@/lib/http/client';
 import { isHttpClientError } from '@/lib/http/errors';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 import Joi from 'joi';
 import InternalError from '@/errors/InternalError';
 
@@ -21,6 +22,7 @@ export const fetchData = async (url, schema, params = {}) => {
         ...defaultParams,
         ...params,
       },
+      cache: CACHE_CATEGORY.INDICES,
     });
 
     return schema.validateAsync(response.data, { abortEarly: true });

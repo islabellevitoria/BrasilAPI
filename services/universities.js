@@ -1,4 +1,5 @@
 import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const BASE_URL = 'https://api.universities.com.br';
 
@@ -35,7 +36,9 @@ const filterUniversitiesResponse = (university) => {
 export const getUniversities = async () => {
   const endpoint = '/universities';
 
-  const { data: body } = await httpClient.get(BASE_URL + endpoint);
+  const { data: body } = await httpClient.get(BASE_URL + endpoint, {
+    cache: CACHE_CATEGORY.UNIVERSITIES,
+  });
 
   return body.map(filterUniversitiesResponse);
 };
@@ -43,7 +46,9 @@ export const getUniversities = async () => {
 export const getUniversitiesById = async (id) => {
   const endpoint = `/universities/${id}`;
 
-  const { data: body } = await httpClient.get(BASE_URL + endpoint);
+  const { data: body } = await httpClient.get(BASE_URL + endpoint, {
+    cache: CACHE_CATEGORY.UNIVERSITIES,
+  });
 
   const data = filterUniversitiesResponse(body);
 

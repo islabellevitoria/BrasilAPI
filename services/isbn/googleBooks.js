@@ -1,6 +1,7 @@
 import httpClient from '@/lib/http/client';
 
 import NotFoundError from '@/errors/NotFoundError';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const API_BASE_URL = 'https://www.googleapis.com/books/v1';
 const API_SEARCH_URL = `${API_BASE_URL}/volumes`;
@@ -52,6 +53,7 @@ export default async function searchInGoogleBooks(isbn) {
       params: { q: `isbn:${isbn}`, country: 'BR' },
       headers: { Accept: 'application/json' },
       timeout: 5000,
+      cache: CACHE_CATEGORY.ISBN,
     });
 
     if (!response.data.items || !response.data.items[0]) {
