@@ -3,6 +3,7 @@ import NotFoundError from '@/errors/NotFoundError';
 import httpClient from '@/lib/http/client';
 import { isNaN } from 'lodash';
 import Papa from 'papaparse';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const changeHeader = (header) => {
   const headerEnum = {
@@ -54,7 +55,7 @@ const changeHeader = (header) => {
 const fetchCvmData = async () => {
   const response = await httpClient.get(
     'https://dados.cvm.gov.br/dados/FI/CAD/DADOS/cad_fi.csv',
-    { timeout: 3000, responseType: 'buffer' }
+    { timeout: 3000, responseType: 'buffer', cache: CACHE_CATEGORY.CVM }
   );
 
   const string = response.data.toString('latin1');

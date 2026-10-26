@@ -34,7 +34,8 @@ describe('API handler /api/eleicoes/anos-eleitorais', () => {
     expect(res.json).toHaveBeenCalledWith(mockResponse);
 
     expect(httpClient.get).toHaveBeenCalledWith(
-      'https://divulgacandcontas.tse.jus.br/divulga/rest/v1/eleicao/anos-eleitorais'
+      'https://divulgacandcontas.tse.jus.br/divulga/rest/v1/eleicao/anos-eleitorais',
+      { cache: 'eleicoes' }
     );
   });
 });

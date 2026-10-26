@@ -1,17 +1,18 @@
-import axios from 'axios';
+import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 export const getDddsData = async () => {
   const url =
     'https://www.anatel.gov.br/dadosabertos/PDA/Codigo_Nacional/PGCN.csv';
   const LINE_BREAK = '\r\n';
 
-  const { data: reponseData } = await axios({
-    url,
-    method: 'get',
-    responseEncoding: 'binary',
+  const response = await httpClient.get(url, {
+    responseType: 'text',
+    encoding: 'binary',
+    cache: CACHE_CATEGORY.DDD,
   });
 
-  const body = reponseData.toString('binary');
+  const body = response.data;
 
   const lines = body.split(LINE_BREAK);
 

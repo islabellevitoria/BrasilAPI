@@ -1,0 +1,124 @@
+{
+  "categories": [
+    {
+      "name": "banks",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_BANKS",
+      "routes": ["/api/banks/v1"]
+    },
+    {
+      "name": "cambio",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_CAMBIO",
+      "routes": ["/api/cambio/v1"]
+    },
+    {
+      "name": "cep",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_CEP",
+      "routes": ["/api/cep/v1", "/api/cep/v2", "/api/hospitais/v1/proximos"]
+    },
+    {
+      "name": "geocoding",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_GEOCODING",
+      "routes": ["/api/cep/v2", "/api/cep/v3", "/api/hospitais/v1/proximos", "/api/solar/v1"]
+    },
+    {
+      "name": "cptec",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_CPTEC",
+      "routes": ["/api/cptec/v1/cidade"]
+    },
+    {
+      "name": "clima",
+      "ttlSeconds": 1800,
+      "env": "HTTP_CACHE_TTL_CLIMA",
+      "routes": ["/api/cptec/v1/clima", "/api/cptec/v1/ondas"]
+    },
+    {
+      "name": "cvm",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_CVM",
+      "routes": ["/api/cvm"]
+    },
+    {
+      "name": "ddd",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_DDD",
+      "routes": ["/api/ddd"]
+    },
+    {
+      "name": "eleicoes",
+      "ttlSeconds": 21600,
+      "env": "HTTP_CACHE_TTL_ELEICOES",
+      "routes": ["/api/eleicoes"]
+    },
+    {
+      "name": "fipe",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_FIPE",
+      "routes": ["/api/fipe"]
+    },
+    {
+      "name": "ibge",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_IBGE",
+      "routes": ["/api/ibge"]
+    },
+    {
+      "name": "ibpt",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_IBPT",
+      "routes": ["/api/ibpt"]
+    },
+    {
+      "name": "indices",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_INDICES",
+      "routes": ["/api/indices"]
+    },
+    {
+      "name": "isbn",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_ISBN",
+      "routes": ["/api/isbn/v1"]
+    },
+    {
+      "name": "ncm",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_NCM",
+      "routes": ["/api/ncm/v1"]
+    },
+    {
+      "name": "registrobr",
+      "ttlSeconds": 300,
+      "env": "HTTP_CACHE_TTL_REGISTROBR",
+      "routes": ["/api/registrobr/v1"]
+    },
+    {
+      "name": "solar",
+      "ttlSeconds": 3600,
+      "env": "HTTP_CACHE_TTL_SOLAR",
+      "routes": ["/api/solar/v1"]
+    },
+    {
+      "name": "b3",
+      "ttlSeconds": 86400,
+      "env": "HTTP_CACHE_TTL_B3",
+      "routes": ["/api/tickers/b3"]
+    },
+    {
+      "name": "universities",
+      "ttlSeconds": 604800,
+      "env": "HTTP_CACHE_TTL_UNIVERSITIES",
+      "routes": ["/api/universities/v1"]
+    }
+  ],
+  "defaults": {
+    "minStoreFreshnessSeconds": 5,
+    "busyTimeoutMs": 250,
+    "breakerThreshold": 5,
+    "breakerCooldownMs": 300000
+  }
+}

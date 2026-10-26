@@ -1,6 +1,7 @@
 import httpClient from '@/lib/http/client';
 import cepPromise from 'cep-promise';
 import { UF_CODE_MAPPER } from '@/util/mapUfToUfCode';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const providers = ['correios', 'viacep', 'widenet', 'correios-alt'];
 
@@ -38,6 +39,7 @@ function getStateIbgeCode(uf) {
 async function fetchOpenCep(cep) {
   const { data } = await httpClient.get(`https://opencep.com/v1/${cep}`, {
     timeout: DEFAULT_TIMEOUT,
+    cache: CACHE_CATEGORY.CEP,
   });
 
   return {

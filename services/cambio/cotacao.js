@@ -1,11 +1,13 @@
 import httpClient from '@/lib/http/client';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 import { formatDate } from '@/services/date';
 
 export const getCurrencyExchange = async (date, currency) => {
   const data = formatDate(date, 'MM-DD-YYYY');
 
   const resp = await httpClient.get(
-    `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${currency}'&@dataCotacao='${data}'&$top=100&$format=json`
+    `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoMoedaDia(moeda=@moeda,dataCotacao=@dataCotacao)?@moeda='${currency}'&@dataCotacao='${data}'&$top=100&$format=json`,
+    { cache: CACHE_CATEGORY.CAMBIO }
   );
 
   const output = resp.data.value.map((item) => ({

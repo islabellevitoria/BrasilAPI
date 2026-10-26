@@ -1,6 +1,7 @@
 import httpClient from '@/lib/http/client';
 import { XMLParser } from 'fast-xml-parser';
 import { CPTEC_URL, STATE_REGION_MAP } from './constants';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 const parser = new XMLParser();
 
@@ -24,6 +25,7 @@ export const getAllCitiesData = async () => {
   const citiesData = await httpClient.get(`${CPTEC_URL}/listaCidades`, {
     responseType: 'text',
     encoding: 'binary',
+    cache: CACHE_CATEGORY.CPTEC,
   });
 
   const parsed = parser.parse(citiesData.data);
@@ -42,6 +44,7 @@ export const getCityData = async (name) => {
   const citiesData = await httpClient.get(`${CPTEC_URL}/listaCidades?city=${name}`, {
     responseType: 'text',
     encoding: 'binary',
+    cache: CACHE_CATEGORY.CPTEC,
   });
 
   const parsed = parser.parse(citiesData.data);

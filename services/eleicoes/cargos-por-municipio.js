@@ -6,6 +6,7 @@ import {
   POSITION_LIST_URL,
   verifyIsNotNumber,
 } from './constants';
+import { CACHE_CATEGORY } from '@/lib/http/cache/categories';
 
 export const listPositionsByMunicipality = async (election, municipality) => {
   if (!election || !municipality)
@@ -29,7 +30,7 @@ export const listPositionsByMunicipality = async (election, municipality) => {
   const requestUrl = `${ELECTIONS_API_URL}${POSITION_LIST_URL}/${election}/${municipality}/cargos`;
 
   try {
-    const response = await httpClient.get(requestUrl);
+    const response = await httpClient.get(requestUrl, { cache: CACHE_CATEGORY.ELEICOES });
     return response.data;
   } catch (error) {
     const err = new Error('Falha ao buscar cargos por município.');
